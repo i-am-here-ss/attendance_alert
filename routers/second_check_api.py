@@ -33,3 +33,26 @@ def trigger_second_check(lecture_id: int, percentage: int = 10):
 
     finally:
         session.close()
+
+@router.get("/attendance/second-check")
+def trigger_fingerprint_check(name: str, lecture_title: str):
+    session: Session = SessionLocal()
+    try:
+        print(f"📢 [2차 지문 요청] {name}님에게 지문인식 요청 전송됨.")
+        send_second_alert(name, lecture_title)
+        return {"message": f"{name} 학생에게 지문 요청 전송 완료."}
+
+    finally:
+        session.close()
+
+@router.get("/attendance/second-result")
+def trigger_fingerprint_result(name: str, result: bool):
+    session: Session = SessionLocal()
+    s = "성공함" if result else "실패함"
+    try:
+        print(f"📢 [2차 지문 출석 결과] {name}님의 지문인식이 {s}.")
+        
+        return {"message": f"{name} 학생에게 지문 인식 결과 전송 완료."}
+
+    finally:
+        session.close()
